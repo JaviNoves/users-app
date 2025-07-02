@@ -1,8 +1,11 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import Swal from "sweetalert2";
+import { UserContext } from "../context/UserContext";
 
 
-export const UserForm = ({handlerAddUser, initialUserForm, userSelected, handlerCloseForm}) => {
+export const UserForm = ({ userSelected, handlerCloseForm}) => {
+
+    const {initialUserForm, handlerAddUser} = useContext(UserContext);
     const [userForm, setUserForm] = useState(initialUserForm);
 
     const {id,username, password, email} = userForm
@@ -33,7 +36,15 @@ export const UserForm = ({handlerAddUser, initialUserForm, userSelected, handler
                     );
             return
         }
-        console.log(userForm);
+        if(!email.includes('@')){
+             Swal.fire(
+                     "Error de validacion email",
+                     "EL email debe ser valido" ,
+                    "error"
+                    );
+            return
+        }
+        
         handlerAddUser(userForm);
         setUserForm(initialUserForm);
     }

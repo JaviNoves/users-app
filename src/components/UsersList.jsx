@@ -1,6 +1,9 @@
+import { useContext } from "react"
+import { UserContext } from "../context/UserContext"
 import { UserRow } from "./UserRow"
 
-export const UsersList = ({users = [], handlerRemoveUser, handlerUserSelectedForm}) => {
+export const UsersList = () => {
+  const {users} = useContext(UserContext);
   return (
         <table className="table table-hover table-striped">
             <thead>
@@ -9,6 +12,7 @@ export const UsersList = ({users = [], handlerRemoveUser, handlerUserSelectedFor
                     <th>username </th>
                     <th>email </th>
                     <th> update</th>
+                    <th> update route</th>
                     <th>remove </th>
                 </tr>
             </thead>
