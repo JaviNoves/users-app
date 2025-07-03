@@ -19,7 +19,7 @@ export const UsersList = () => {
             <tbody>
                 {
                     users.map(({id, username, email}) => (
-                        <UserRow  key={id} id={id} username={username} email={email} handlerRemoveUser={handlerRemoveUser} handlerUserSelectedForm={handlerUserSelectedForm}/>
+                        <UserRow  key={id} id={id} username={username} email={email} />
                     ))
                 }
             </tbody>

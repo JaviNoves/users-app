@@ -1,5 +1,5 @@
 import { UserContext } from "./UserContext"
-
+import { useUsers } from "../hooks/useUsers";
 export const UserProvider = ({children}) => {
        const {
       users,
