@@ -6,11 +6,13 @@ export const UserProvider = ({children}) => {
       userSelected,
       initialUserForm,
       visibleForm,
+      errors,
       handlerAddUser,
       handlerRemoveUser,
       handlerUserSelectedForm,
       handlerOpenForm,
       handlerCloseForm,
+      getUsers,
     } = useUsers();
     return(
         <UserContext.Provider value={
@@ -19,11 +21,13 @@ export const UserProvider = ({children}) => {
                 userSelected,
                 initialUserForm,
                 visibleForm,
+                errors,
                 handlerAddUser,
                 handlerRemoveUser,
                 handlerUserSelectedForm,
                 handlerOpenForm,
                 handlerCloseForm,
+                getUsers,
             }
         } >{children}</UserContext.Provider>
     )
