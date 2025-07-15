@@ -1,8 +1,9 @@
- import { useReducer, useState } from "react";
+ import { useContext, useReducer, useState } from "react";
  import { usersReducer } from "../reducers/usersReducer";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { findAll, remove, save, update } from "../services/userService";
+import { AuthContext } from "../auth/context/AuthContext";
  const initialUsers = [];
 
     const initialUserForm = {
@@ -10,6 +11,7 @@ import { findAll, remove, save, update } from "../services/userService";
         username: '',
         password: '',
         email: '',
+        admin: false,
     }
     const initialErrors = {
         username: '',
@@ -23,7 +25,7 @@ export const useUsers = () => {
 
    const [errors, setErrors] = useState({initialErrors});
    const navigate = useNavigate();
-   
+   const {login, handlerLogout} = useContext(AuthContext);
    const getUsers = async() => {
       const result = await findAll();
       dispatch({
@@ -34,6 +36,8 @@ export const useUsers = () => {
 
 
    const handlerAddUser = async(user) => {
+
+    if (!login.isAdmin) return;
     let response;
     try {
       
@@ -67,6 +71,8 @@ export const useUsers = () => {
         if(error.response.data?.message?.includes('UK_email')){
           setErrors({email: 'El email ya existe'})
         }
+      }else if(error.response?.status ==401){
+        handlerLogout();
       }else{
         throw error;
       }
@@ -75,6 +81,7 @@ export const useUsers = () => {
    
 
       const handlerRemoveUser = (id) => {
+        if (!login.isAdmin) return;
        Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
@@ -83,9 +90,11 @@ export const useUsers = () => {
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         confirmButtonText: "Yes, delete it!"
-        }).then((result) => {
+        }).then( async(result) => {
         if (result.isConfirmed) {
-          remove(id);
+
+          try {
+            await remove(id);
             dispatch({
            type: 'removeUser',
            payload: id,
@@ -95,8 +104,13 @@ export const useUsers = () => {
             text: "Your user has been deleted.",
             icon: "success"
             });
+            
+          } catch (error) {
+            if(error.response?.status ==401){
+               handlerLogout();
+          }   
         }
-            });
+            }});
         }
    
       const handlerUserSelectedForm = (user) => {
